@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useId, useRef, useState } from "react";
+import TimeSelect from "@/components/TimeSelect";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -31,12 +32,21 @@ type Props = {
     mealType?: string;
     time?: string;
     notes?: string;
+    parts?: string[];
   };
 };
 
 export default function MealEditDialog({ meal }: Props) {
   const [open, setOpen] = useState(false);
   const [_, action, isPending] = useActionState(editMeal, null);
+  const baseId = useId();
+  const counter = useRef(0);
+  const makeKey = `${baseId}-${counter.current++}`;
+
+  type Part = { id: string; value: string };
+  const [parts, setParts] = useState<Part[]>(
+    (meal.parts ?? [""]).map((v) => ({ id: makeKey, value: v })),
+  );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -56,6 +66,51 @@ export default function MealEditDialog({ meal }: Props) {
             <Field>
               <FieldLabel htmlFor="edit-name">Meal name</FieldLabel>
               <Input id="edit-name" name="name" defaultValue={meal.name} />
+            </Field>
+            <Field>
+              <FieldLabel>Meal parts</FieldLabel>
+              <div className="grid gap-2">
+                {parts.map((part) => (
+                  <div key={part.id} className="flex items-center gap-2">
+                    <Input
+                      name="parts"
+                      defaultValue={part.value}
+                      onChange={(e) =>
+                        setParts((p) =>
+                          p.map((x) =>
+                            x.id === part.id
+                              ? { ...x, value: e.target.value }
+                              : x,
+                          ),
+                        )
+                      }
+                      placeholder={"e.g., Salad"}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setParts((p) => p.filter((x) => x.id !== part.id))
+                      }
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={() =>
+                    setParts((p) =>
+                      p.length >= 20 ? p : [...p, { id: makeKey, value: "" }],
+                    )
+                  }
+                >
+                  Add part
+                </Button>
+              </div>
             </Field>
             <Field>
               <FieldLabel htmlFor="edit-mealType">Meal type</FieldLabel>
@@ -84,12 +139,7 @@ export default function MealEditDialog({ meal }: Props) {
             </Field>
             <Field>
               <FieldLabel htmlFor="edit-time">Time</FieldLabel>
-              <Input
-                id="edit-time"
-                name="time"
-                type="time"
-                defaultValue={meal.time}
-              />
+              <TimeSelect id="edit-time" name="time" defaultValue={meal.time} />
             </Field>
             <Field>
               <FieldLabel htmlFor="edit-notes">Notes</FieldLabel>

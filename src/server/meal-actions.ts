@@ -6,6 +6,7 @@ import { createMealSchema, updateMealSchema } from "@/lib/validators";
 
 export async function createMeal(_prev: unknown, formData: FormData) {
   const input = Object.fromEntries(formData) as Record<string, string>;
+  const parts = formData.getAll("parts").map((v) => String(v)).filter(Boolean);
   const parsed = createMealSchema.safeParse({
     date: input.date,
     name: input.name,
@@ -14,6 +15,7 @@ export async function createMeal(_prev: unknown, formData: FormData) {
     time: input.time || undefined,
     notes: input.notes || undefined,
     photos: input.photos ? input.photos.split(",") : undefined,
+    parts: parts.length ? parts : undefined,
   });
   if (!parsed.success) return { ok: false, error: parsed.error.message };
 
@@ -27,6 +29,7 @@ export async function createMeal(_prev: unknown, formData: FormData) {
 
 export async function editMeal(_prev: unknown, formData: FormData) {
   const input = Object.fromEntries(formData) as Record<string, string>;
+  const parts = formData.getAll("parts").map((v) => String(v)).filter(Boolean);
   const parsed = updateMealSchema.safeParse({
     id: input.id,
     date: input.date || undefined,
@@ -36,6 +39,7 @@ export async function editMeal(_prev: unknown, formData: FormData) {
     time: input.time || undefined,
     notes: input.notes || undefined,
     photos: input.photos ? input.photos.split(",") : undefined,
+    parts: parts.length ? parts : undefined,
   });
   if (!parsed.success) return { ok: false, error: parsed.error.message };
 

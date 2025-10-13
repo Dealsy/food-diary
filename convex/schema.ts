@@ -10,6 +10,7 @@ export default defineSchema({
     time: v.optional(v.string()),
     notes: v.optional(v.string()),
     photos: v.optional(v.array(v.string())),
+    parts: v.optional(v.array(v.string())),
   }).index("by_date", ["date"]),
 });
 

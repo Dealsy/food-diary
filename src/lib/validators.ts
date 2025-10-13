@@ -7,7 +7,7 @@ import {
 
 export const mealTypeSchema = z.enum(MEAL_TYPES);
 
-export const photoUrlSchema = z.string().url();
+export const photoUrlSchema = z.url();
 
 export const createMealSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
@@ -23,6 +23,7 @@ export const createMealSchema = z.object({
     .optional(),
   notes: z.string().max(2000).optional(),
   photos: z.array(photoUrlSchema).max(MAX_PHOTOS_PER_MEAL).optional(),
+  parts: z.array(z.string().min(1)).max(20).optional(),
 });
 
 export type CreateMealInput = z.infer<typeof createMealSchema>;

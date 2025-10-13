@@ -14,6 +14,7 @@ type Meal = {
   notes?: string;
   photos?: string[];
   date: string;
+  parts?: string[];
 };
 
 type Props = { meal: Meal };
@@ -31,6 +32,27 @@ export default function MealRow({ meal }: Props) {
           </span>
         )}
       </div>
+      <div className="mt-1 text-xs text-muted-foreground flex gap-3">
+        {meal.mealType && <span className="capitalize">{meal.mealType}</span>}
+        {meal.time && <span>{meal.time}</span>}
+      </div>
+      {meal.notes && (
+        <p className="mt-2 text-sm text-muted-foreground whitespace-pre-wrap">
+          {meal.notes}
+        </p>
+      )}
+      {meal.parts && meal.parts.length > 0 && (
+        <ul className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
+          {meal.parts.map((p, i) => (
+            <li
+              key={`${meal._id}-part-${i}`}
+              className="rounded-full border px-2 py-1 bg-muted"
+            >
+              {p}
+            </li>
+          ))}
+        </ul>
+      )}
       <div className="mt-2 flex items-center gap-2">
         <form action={removeAction}>
           <input type="hidden" name="id" value={meal._id} />

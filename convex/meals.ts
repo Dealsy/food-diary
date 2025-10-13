@@ -21,6 +21,7 @@ export const addMeal = mutation({
     time: v.optional(v.string()),
     notes: v.optional(v.string()),
     photos: v.optional(v.array(v.string())),
+    parts: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     const id = await ctx.db.insert("meals", args);
@@ -38,6 +39,7 @@ export const updateMeal = mutation({
     time: v.optional(v.string()),
     notes: v.optional(v.string()),
     photos: v.optional(v.array(v.string())),
+    parts: v.optional(v.array(v.string())),
   },
   handler: async (ctx, { id, ...rest }) => {
     await ctx.db.patch(id, rest);
