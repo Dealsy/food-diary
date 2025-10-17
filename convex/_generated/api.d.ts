@@ -13,6 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as exercises from "../exercises.js";
 import type * as meals from "../meals.js";
 import type * as storage from "../storage.js";
 
@@ -25,6 +26,7 @@ import type * as storage from "../storage.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  exercises: typeof exercises;
   meals: typeof meals;
   storage: typeof storage;
 }>;

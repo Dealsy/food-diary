@@ -1,20 +1,10 @@
 "use client";
 
 import { useId, useRef, useState } from "react";
-
 import TimeSelect from "@/components/TimeSelect";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { MEAL_TYPES } from "@/lib/constants";
-import PhotoUploader from "./PhotoUploader";
 import { Button } from "./ui/button";
 
 type Props = {
@@ -26,7 +16,7 @@ type Props = {
   hideActions?: boolean;
 };
 
-export default function MealForm({
+export default function ExerciseForm({
   date,
   action,
   isPending,
@@ -40,7 +30,6 @@ export default function MealForm({
 
   type Part = { id: string; value: string };
   const [parts, setParts] = useState<Part[]>([{ id: genKey(), value: "" }]);
-  const [photoUrls, setPhotoUrls] = useState<string[]>([]);
 
   const addPart = () =>
     setParts((p) => (p.length >= 20 ? p : [...p, { id: genKey(), value: "" }]));
@@ -54,15 +43,14 @@ export default function MealForm({
   return (
     <form id={id} className="grid gap-2" action={action}>
       <input type="hidden" name="date" value={date} />
-      <input type="hidden" name="photos" value={photoUrls.join(",")} />
 
       <FieldGroup>
         <Field>
-          <FieldLabel htmlFor="name">Meal name</FieldLabel>
-          <Input id="name" name="name" placeholder="e.g., Chicken salad" />
+          <FieldLabel htmlFor="name">Exercise name</FieldLabel>
+          <Input id="name" name="name" placeholder="e.g., Running" />
         </Field>
         <Field>
-          <FieldLabel>Meal parts</FieldLabel>
+          <FieldLabel>Parts</FieldLabel>
           <div className="grid gap-2">
             {parts.map((part) => (
               <div key={part.id} className="flex items-center gap-2">
@@ -70,7 +58,7 @@ export default function MealForm({
                   name="parts"
                   value={part.value}
                   onChange={(e) => updatePart(part.id, e.target.value)}
-                  placeholder={"e.g., Salad"}
+                  placeholder={"e.g., Warm-up"}
                 />
                 <Button
                   type="button"
@@ -93,22 +81,7 @@ export default function MealForm({
           </div>
         </Field>
         <Field>
-          <FieldLabel htmlFor="mealType">Meal type</FieldLabel>
-          <Select name="mealType">
-            <SelectTrigger id="mealType">
-              <SelectValue placeholder="Select type (optional)" />
-            </SelectTrigger>
-            <SelectContent>
-              {MEAL_TYPES.map((mealType) => (
-                <SelectItem key={mealType} value={mealType}>
-                  {mealType}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="calories">Calories</FieldLabel>
+          <FieldLabel htmlFor="calories">Calories burned</FieldLabel>
           <Input id="calories" name="calories" type="number" min={0} />
         </Field>
         <Field>
@@ -121,13 +94,6 @@ export default function MealForm({
         </Field>
       </FieldGroup>
 
-      <FieldGroup>
-        <Field>
-          <FieldLabel>Photos</FieldLabel>
-          <PhotoUploader onChange={setPhotoUrls} value={photoUrls} />
-        </Field>
-      </FieldGroup>
-
       {hideActions ? null : (
         <div className="sticky bottom-0 left-0 right-0 -mx-6 -mb-6 flex items-center gap-2 border-t bg-white px-6 py-4">
           <Button
@@ -135,7 +101,7 @@ export default function MealForm({
             className="rounded-md border px-3 py-2"
             disabled={isPending}
           >
-            {isPending ? "Saving..." : "Add meal"}
+            {isPending ? "Saving..." : "Add exercise"}
           </Button>
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel

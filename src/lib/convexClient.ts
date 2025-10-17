@@ -13,6 +13,7 @@ export function getConvexClient(): ConvexHttpClient | null {
 export type SafeConvexClient = {
   query: (name: string, args: unknown) => Promise<unknown>;
   mutation: (name: string, args: unknown) => Promise<unknown>;
+  action: (name: string, args: unknown) => Promise<unknown>;
 };
 
 export function getConvex(): SafeConvexClient | null {

@@ -17,10 +17,8 @@ export const createMealSchema = z.object({
     .string()
     .transform((v) => (v === "" ? undefined : Number(v)))
     .pipe(z.number().int().nonnegative().max(5000).optional()),
-  time: z
-    .string()
-    .regex(/^\d{2}:\d{2}$/)
-    .optional(),
+  // Allow any string for time (or omit entirely)
+  time: z.string().optional(),
   notes: z.string().max(2000).optional(),
   photos: z.array(photoUrlSchema).max(MAX_PHOTOS_PER_MEAL).optional(),
   parts: z.array(z.string().min(1)).max(20).optional(),
@@ -55,3 +53,26 @@ export const photoFileSchema = z
         : false,
     "Invalid file type",
   );
+
+// Exercises
+export const createExerciseSchema = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  name: z.string().min(1, "Exercise name is required"),
+  calories: z
+    .string()
+    .transform((v) => (v === "" ? undefined : Number(v)))
+    .pipe(z.number().int().nonnegative().max(5000).optional()),
+  // Allow any string for time (or omit entirely)
+  time: z.string().optional(),
+  notes: z.string().max(2000).optional(),
+  photos: z.array(photoUrlSchema).max(MAX_PHOTOS_PER_MEAL).optional(),
+  parts: z.array(z.string().min(1)).max(20).optional(),
+});
+
+export type CreateExerciseInput = z.infer<typeof createExerciseSchema>;
+
+export const updateExerciseSchema = createExerciseSchema
+  .partial()
+  .and(z.object({ id: z.string().min(1) }));
+
+export type UpdateExerciseInput = z.infer<typeof updateExerciseSchema>;

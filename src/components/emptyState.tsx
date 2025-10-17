@@ -1,4 +1,3 @@
-import { Grape } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -9,17 +8,23 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 
-export function EmptyState({ cta }: { cta?: React.ReactNode }) {
+export function EmptyState({
+  cta,
+  title,
+  description,
+  icon,
+}: {
+  cta?: React.ReactNode;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+}) {
   return (
     <Empty>
       <EmptyHeader>
-        <EmptyMedia variant="icon">
-          <Grape />
-        </EmptyMedia>
-        <EmptyTitle>No Meals Yet</EmptyTitle>
-        <EmptyDescription>
-          you haven't added any meals yet. Add a meal to get started.
-        </EmptyDescription>
+        <EmptyMedia variant="icon">{icon}</EmptyMedia>
+        <EmptyTitle>{title}</EmptyTitle>
+        <EmptyDescription>{description}</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
         {cta ?? (

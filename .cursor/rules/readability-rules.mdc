@@ -1,0 +1,88 @@
+---
+alwaysApply: true
+---
+
+Always use the most readable code possible. 
+
+This means using the most descriptive names possible for variables, functions, and classes.
+
+
+For example, when mapping an array to display in UI, never use variables like this 
+
+
+```tsx
+    {MEAL_TYPES.map((t) => (
+        <SelectItem key={t} value={t}>
+            {t}
+        </SelectItem>
+        ))}
+```
+
+Instead, use the following:
+
+```tsx
+    {MEAL_TYPES.map((mealType) => (
+        <SelectItem key={mealType} value={mealType}>
+            {mealType}
+        </SelectItem>
+    ))}
+```
+
+This should apply for any parameters, variables, or functions you use in the codebase.
+
+another example is when you are using a map function to transform an array.
+
+```ts
+const transformedArray = array.map((item) => {
+    return item.toUpperCase();
+});
+```
+
+Instead, use the following:
+
+```ts
+const transformedArray = array.map((item) => item.toUpperCase());
+```
+
+Examples of bad variable names:
+
+
+```ts
+const t = "test";
+const x = "test";
+const loading = true;
+const fetching = true;
+```
+Examples of good variable names:
+
+```ts
+const test = "test";
+const isLoading = true;
+const isFetching = true;
+```
+
+When using conditional statements like this 
+
+```ts
+meal.parts && meal.parts.length > 0 &&
+```
+
+Always create const variables for the conditionals like this:
+
+```ts
+const hasParts = meal.parts && meal.parts.length > 0;
+```
+
+Then use the const variable in the conditional statement like this:
+
+```tsx
+hasParts && (
+    <ul className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
+        {meal.parts.map((part, index) => (
+            <li key={`${meal._id}-part-${index}`} className="rounded-full border px-2 py-1 bg-muted">
+                {part}
+            </li>
+        ))}
+    </ul>
+);
+```

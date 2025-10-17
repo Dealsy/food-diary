@@ -1,11 +1,18 @@
 import { v } from "convex/values";
-import { action } from "./_generated/server";
+import { mutation } from "./_generated/server";
 
-// Placeholder: Wire Convex file storage once configured; return URL string
-export const uploadPhoto = action({
-  args: { file: v.bytes() },
-  handler: async (_ctx, _args) => {
-    // Implement via Convex storage when available
-    return "";
+// 1) Generate a short-lived upload URL
+export const generateUploadUrl = mutation({
+  handler: async (ctx) => {
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+
+// 2) After POSTing the file, persist/return a public URL for the storage id
+export const saveUploadedPhoto = mutation({
+  args: { storageId: v.id("_storage") },
+  handler: async (ctx, { storageId }) => {
+    const url = await ctx.storage.getUrl(storageId);
+    return { url };
   },
 });
