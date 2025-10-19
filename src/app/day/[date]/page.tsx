@@ -1,3 +1,4 @@
+import { format as formatDate } from "date-fns";
 import { Suspense, ViewTransition } from "react";
 import DayClient from "@/components/DayClient";
 import VTLink from "@/components/VTLink";
@@ -21,6 +22,13 @@ export default async function DayPage({ params }: PageProps) {
       d.getDate(),
     ).padStart(2, "0")}`;
 
+  const heading = (() => {
+    // date param is in yyyy-MM-dd; show as dd-MM-yyyy without timezone shifts
+    const [y, m, d] = date.split("-").map((x) => Number(x));
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    return formatDate(dt, "dd-MM-yyyy");
+  })();
+
   return (
     <ViewTransition>
       <div className="mx-auto max-w-5xl px-4 pt-40">
@@ -34,13 +42,13 @@ export default async function DayPage({ params }: PageProps) {
               Close
             </VTLink>
           </div>
-          <h1 className="text-2xl font-semibold">{date}</h1>
+          <h1 className="text-2xl font-semibold">{heading}</h1>
         </header>
 
         <DayClient date={date} prevDate={format(prev)} nextDate={format(next)}>
           <Suspense
             fallback={
-              <div className="relative rounded-xl border bg-white/98 p-4 md:p-6 shadow-[inset_0_0_40px_rgba(0,0,0,0.04)] h-[400px]" />
+              <div className="relative rounded-xl border bg-white/98 p-4 md:p-6 shadow-[inset_0_0_40px_rgba(0,0,0,0.04)] shadow-on h-[400px]" />
             }
           >
             <ViewTransition>

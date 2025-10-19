@@ -6,7 +6,9 @@ import TimeSelect from "@/components/TimeSelect";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -30,8 +32,8 @@ type Props = {
 };
 
 export default function ExerciseEditDialog({ exercise }: Props) {
-  const [open, setOpen] = useState(false);
   const [_, action, isPending] = useActionState(editExercise, null);
+  const [open, setOpen] = useState(false);
   const baseId = useId();
   const counter = useRef(0);
   const genKey = () => `${baseId}-${counter.current++}`;
@@ -49,7 +51,7 @@ export default function ExerciseEditDialog({ exercise }: Props) {
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[560px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit Exercise</DialogTitle>
         </DialogHeader>
@@ -132,12 +134,27 @@ export default function ExerciseEditDialog({ exercise }: Props) {
                   />
                 </Field>
                 <Field>
-                  <FieldLabel htmlFor="edit-ex-time">Time</FieldLabel>
-                  <TimeSelect
-                    id="edit-ex-time"
-                    name="time"
-                    defaultValue={exercise.time}
-                  />
+                  <FieldLabel>Time</FieldLabel>
+                  <div className="grid gap-3">
+                    <div className="grid gap-2">
+                      <FieldLabel htmlFor="edit-ex-time-start">
+                        Start
+                      </FieldLabel>
+                      <TimeSelect
+                        id="edit-ex-time-start"
+                        name="timeStart"
+                        defaultValue={exercise.time?.split("-")[0]}
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <FieldLabel htmlFor="edit-ex-time-end">Finish</FieldLabel>
+                      <TimeSelect
+                        id="edit-ex-time-end"
+                        name="timeEnd"
+                        defaultValue={exercise.time?.split("-")[1]}
+                      />
+                    </div>
+                  </div>
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="edit-ex-notes">Notes</FieldLabel>
@@ -156,18 +173,17 @@ export default function ExerciseEditDialog({ exercise }: Props) {
             </form>
           </div>
         </div>
-        <div className="-mx-6 -mb-6 flex items-center gap-2 border-t bg-white px-6 py-4">
+        <DialogFooter className="-mx-6 -mb-6 flex items-center gap-2 border-t bg-white px-6 py-4">
           <Button type="submit" form="exercise-edit-form" disabled={isPending}>
             {isPending ? "Saving..." : "Save"}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setOpen(false)}
-          >
-            Cancel
-          </Button>
-        </div>
+
+          <DialogClose asChild>
+            <Button type="button" variant="outline">
+              Cancel
+            </Button>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

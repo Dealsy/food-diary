@@ -1,10 +1,12 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -15,12 +17,10 @@ import ExerciseForm from "./ExerciseForm";
 type Props = { date: string };
 
 export default function ExerciseDialog({ date }: Props) {
-  const [open, setOpen] = useState(false);
-  const [result, formAction, isPending] = useActionState(createExercise, null);
-  const computedOpen = open && !(result as any)?.ok;
+  const [_, formAction, isPending] = useActionState(createExercise, null);
 
   return (
-    <Dialog open={computedOpen} onOpenChange={setOpen}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button type="button" className="rounded-md border px-3 py-2">
           Add Exercise
@@ -37,12 +37,11 @@ export default function ExerciseDialog({ date }: Props) {
               date={date}
               action={formAction}
               isPending={isPending}
-              onCancel={() => setOpen(false)}
               hideActions
             />
           </div>
         </div>
-        <div className="-mx-6 -mb-6 flex items-center gap-2 border-t bg-white px-6 py-4">
+        <DialogFooter className="-mx-6 -mb-6 flex items-center gap-2 border-t bg-white px-6 py-4">
           <Button
             type="submit"
             form="exercise-create-form"
@@ -50,14 +49,13 @@ export default function ExerciseDialog({ date }: Props) {
           >
             {isPending ? "Saving..." : "Add exercise"}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setOpen(false)}
-          >
-            Cancel
-          </Button>
-        </div>
+
+          <DialogClose asChild>
+            <Button type="button" variant="outline">
+              Cancel
+            </Button>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

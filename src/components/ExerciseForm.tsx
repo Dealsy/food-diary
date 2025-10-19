@@ -85,8 +85,17 @@ export default function ExerciseForm({
           <Input id="calories" name="calories" type="number" min={0} />
         </Field>
         <Field>
-          <FieldLabel htmlFor="time">Time</FieldLabel>
-          <TimeSelect id="time" name="time" />
+          <FieldLabel>Time</FieldLabel>
+          <div className="grid gap-3">
+            <div className="grid gap-2">
+              <FieldLabel htmlFor="time-start">Start</FieldLabel>
+              <TimeSelect id="time-start" name="timeStart" />
+            </div>
+            <div className="grid gap-2">
+              <FieldLabel htmlFor="time-end">Finish</FieldLabel>
+              <TimeSelect id="time-end" name="timeEnd" />
+            </div>
+          </div>
         </Field>
         <Field>
           <FieldLabel htmlFor="notes">Notes</FieldLabel>

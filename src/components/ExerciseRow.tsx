@@ -1,5 +1,6 @@
 "use client";
 
+import { differenceInMinutes } from "date-fns";
 import { useActionState } from "react";
 import ExerciseEditDialog from "@/components/ExerciseEditDialog";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,27 @@ export default function ExerciseRow({ exercise }: { exercise: Exercise }) {
       <CardHeader className="border-b">
         <CardTitle className="text-lg">{exercise.name}</CardTitle>
         <CardDescription className="flex gap-3 text-sm">
-          {exercise.time && <span>{exercise.time}</span>}
+          {exercise.time
+            ? (() => {
+                const [startStr, endStr] = exercise.time.split("-");
+                const getAestDate = (dateIso: string, hhmm: string) => {
+                  const [h, m] = hhmm.split(":").map((x) => Number(x));
+                  const [y, mon, d] = dateIso.split("-").map((x) => Number(x));
+                  const utcMs = Date.UTC(y, mon - 1, d, h - 10, m);
+                  return new Date(utcMs);
+                };
+                const start = getAestDate(exercise.date, startStr);
+                const end = getAestDate(exercise.date, endStr || startStr);
+                const mins = Math.max(0, differenceInMinutes(end, start));
+                return (
+                  <span>
+                    {startStr}
+                    {endStr ? ` - ${endStr}` : ""}
+                    {mins > 0 ? ` (${mins}m)` : ""}
+                  </span>
+                );
+              })()
+            : null}
         </CardDescription>
         <CardAction>
           {typeof exercise.calories === "number" ? (

@@ -10,11 +10,14 @@ import {
 export async function createExercise(_prev: unknown, formData: FormData) {
   const input = Object.fromEntries(formData) as Record<string, string>;
   const parts = formData.getAll("parts").map((v) => String(v)).filter(Boolean);
+  const timeStart = input.timeStart;
+  const timeEnd = input.timeEnd;
+  const composedTime = input.time || (timeStart && timeEnd ? `${timeStart}-${timeEnd}` : undefined);
   const parsed = createExerciseSchema.safeParse({
     date: input.date,
     name: input.name,
     calories: input.calories ?? "",
-    time: input.time || undefined,
+    time: composedTime || undefined,
     notes: input.notes || undefined,
     photos: input.photos ? input.photos.split(",") : undefined,
     parts: parts.length ? parts : undefined,
@@ -32,12 +35,15 @@ export async function createExercise(_prev: unknown, formData: FormData) {
 export async function editExercise(_prev: unknown, formData: FormData) {
   const input = Object.fromEntries(formData) as Record<string, string>;
   const parts = formData.getAll("parts").map((v) => String(v)).filter(Boolean);
+  const timeStart = input.timeStart;
+  const timeEnd = input.timeEnd;
+  const composedTime = input.time || (timeStart && timeEnd ? `${timeStart}-${timeEnd}` : undefined);
   const parsed = updateExerciseSchema.safeParse({
     id: input.id,
     date: input.date || undefined,
     name: input.name || undefined,
     calories: input.calories ?? undefined,
-    time: input.time || undefined,
+    time: composedTime || undefined,
     notes: input.notes || undefined,
     photos: input.photos ? input.photos.split(",") : undefined,
     parts: parts.length ? parts : undefined,
